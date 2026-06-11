@@ -1,0 +1,20 @@
+textarea::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 6px;
+}
+
+textarea::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #93c5fd;
+  border-radius: 0px;
+}
+
+textarea::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+textarea::-webkit-scrollbar-button,
+body::-webkit-scrollbar-button {
+  display: none;
+}

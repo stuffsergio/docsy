@@ -1,0 +1,51 @@
+@baseUrl = http://localhost:3000/api
+@token = PEGA_AQUI_EL_TOKEN
+
+### Health check
+GET {{baseUrl}}/health
+
+### Obtener todos los productos
+GET {{baseUrl}}/lista
+
+### Obtener producto por ID
+GET {{baseUrl}}/lista/1
+
+### Crear producto
+POST {{baseUrl}}/lista
+Content-Type: application/json
+
+{
+  "title": "Título de ejemplo",
+  "subtitle": "Subtítulo de ejemplo",
+  "body": "Cuerpo del documento de ejemplo",
+  "status": "pendiente
+}
+
+### Actualizar producto
+PUT {{baseUrl}}/lista/1
+Content-Type: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Teclado mecánico actualizado",
+  "description": "Teclado actualizado desde VSCode",
+  "price": 89.99,
+  "stock": 8
+}
+
+### Eliminar producto
+DELETE {{baseUrl}}/lista/1
+Authorization: Bearer {{token}}
+
+### Login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@email.com",
+  "password": "123456"
+}
+
+### Perfil autenticado
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{token}}

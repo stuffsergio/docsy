@@ -1,0 +1,112 @@
+openapi: 3.0.0
+
+info:
+  title: API de Documentos
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:3000/api
+
+paths:
+  /lista:
+    get:
+      summary: Obtiene todos los documentos
+      description: Devuelve un listado con todos los documentos registrados.
+      tags:
+        - Lista
+      responses:
+        "200":
+          description: Lista de documentos obtenida correctamente
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                      example: 1
+                    title:
+                      type: string
+                      example: Título del documento
+                    subtitle:
+                      type: string
+                      example: Subtítulo del documento
+                    body:
+                      type: string
+                      example: Cuerpo del documento
+                    status:
+                      type: string
+                      example: pendiente
+    post:
+      summary: Crear un nuevo documento
+      description: Registra un nuevo documento en la base de datos
+      tags:
+        - Lista
+
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - subtitle
+                - body
+                - status
+              properties:
+                title:
+                  type: string
+                  example: Título del documento
+
+                subtitle:
+                  type: string
+                  example: Subtítulo del documento
+
+                body:
+                  type: string
+                  example: Aquí va el contenido de la noticia
+
+                status:
+                  type: string
+                  example: pendiente
+
+      responses:
+        "200":
+          description: Documento creado correctamente
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Documento creado correctamente
+
+                  documento:
+                    type: object
+                    properties:
+                      id:
+                        type: integer
+                        example: 1
+
+                      title:
+                        type: string
+                        example: Título del documento
+
+                      subtitle:
+                        type: string
+                        example: Subtítulo del documento
+
+                      body:
+                        type: string
+                        example: Aquí va el contenido de la noticia
+
+                      status:
+                        type: string
+                        example: pendiente
+
+        "500":
+          description: Error interno del servidor
