@@ -77,9 +77,6 @@ export default function PublicDocs() {
           />
         </div>
         <div>
-          <p>Estás buscando: {q}</p>
-        </div>
-        <div>
           <Link
             to="/docs"
             className="group flex flex-row items-center gap-2 py-1.5 px-4 border border-[#1f1f1f]/60 bg-white text-black rounded-full hover:opacity-90 transition-all transform duration-250"

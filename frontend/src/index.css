@@ -21,6 +21,23 @@
   src: url("/fonts/GohuRegular.woff2");
 }
 
+@font-face {
+  font-family: "EditorialRegular";
+  src: url("/fonts/Editorial-Regular.woff2");
+}
+@font-face {
+  font-family: "EditorialRegularItalic";
+  src: url("/fonts/Editorial-Regular-Italic.woff2");
+}
+@font-face {
+  font-family: "EditorialLight";
+  src: url("/fonts/Editorial-Light.woff2");
+}
+@font-face {
+  font-family: "EditorialLightItalic";
+  src: url("/fonts/Editorial-Light-Italic.woff2");
+}
+
 body {
   background-color: #111111;
   color: #fff;
@@ -31,7 +48,19 @@ body {
 .geist-mono {
   font-family: "GeistMonoNerd", sans-serif;
 }
-
 .geist-mono-regular {
   font-family: "GeistMonoNerdRegular", sans-serif;
+}
+
+.editorial-regular {
+  font-family: "EditorialRegular", sans-serif;
+}
+.editorial-regular-italic {
+  font-family: "EditorialRegularItalic", sans-serif;
+}
+.editorial-light {
+  font-family: "EditorialLight", sans-serif;
+}
+.editorial-light-italic {
+  font-family: "EditorialLightItalic", sans-serif;
 }

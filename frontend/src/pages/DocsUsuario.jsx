@@ -1,5 +1,5 @@
 import { useAuth } from "../context/AuthContext";
-import { Plus } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { mainAnimation } from "../utils/animation";
@@ -50,7 +50,10 @@ export default function DocsUsuario() {
       {documentos.length !== 0 && (
         <div className="w-[80dvw] m-auto flex flex-row justify-between items-center py-10 px-5">
           <div className="flex flex-row items-center gap-5">
-            <label htmlFor="buscar">Buscar</label>
+            <label htmlFor="buscar">
+              Buscar
+              <Search className="w-5 h-auto" />
+            </label>
             <input
               type="search"
               name="buscar"
@@ -71,26 +74,28 @@ export default function DocsUsuario() {
 
       <div className="w-[80dvw] m-auto mb-10">
         {/* DOCUMENTOS DEL USUARIO */}
-        {documentos.map((l, index) => (
-          <Lista
-            key={l.id}
-            index={index}
-            title={l.title}
-            subtitle={l.subtitle}
-            body={l.body}
-            status={l.status}
-            cargar={() => {
-              setDocEditar(l);
-              setIsOpen(true);
-              setIndexDoc(index);
-            }}
-            setQuienEliminar={() => {
-              setIsOpenEliminar(true);
-              setDocEliminar(l);
-              setIndexDoc(index);
-            }}
-          />
-        ))}
+        <div className="flex flex-col gap-1">
+          {documentos.map((l, index) => (
+            <Lista
+              key={l.id}
+              index={index}
+              title={l.title}
+              subtitle={l.subtitle}
+              body={l.body}
+              status={l.status}
+              cargar={() => {
+                setDocEditar(l);
+                setIsOpen(true);
+                setIndexDoc(index);
+              }}
+              setQuienEliminar={() => {
+                setIsOpenEliminar(true);
+                setDocEliminar(l);
+                setIndexDoc(index);
+              }}
+            />
+          ))}
+        </div>
 
         <div className="flex items-center justify-center py-20">
           {documentos.length === 0 && (

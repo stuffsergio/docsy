@@ -10,6 +10,7 @@ import MainLayout from "./layout/MainLayout";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Invitado from "./components/auth/Invitado";
 import DocsUsuario from "./pages/DocsUsuario";
+import Why from "./pages/Why";
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
         <Route index element={<Home />} />
         <Route path="/publicDocs" element={<PublicDocs />} />
         <Route path="/publicDocs/:id" element={<PublicDocsDetalle />} />
+        <Route path="/why" element={<Why />} />
 
         <Route element={<ProtectedRoute />}>
           <Route path="/docs" element={<DocsUsuario />} />
