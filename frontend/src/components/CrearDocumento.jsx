@@ -259,9 +259,9 @@ export default function CrearDocumento({
               </select>
             </div>
 
-            <div>
+            <div className="flex flex-row justify-between text-lg">
               <label htmlFor="image">Subir imagen</label>
-              <input type="image" name="" id="" />
+              <input type="file" src="" alt="image upload" className="border" />
             </div>
             {editando ? (
               <motion.div

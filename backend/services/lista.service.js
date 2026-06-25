@@ -46,9 +46,7 @@ export const getPublicDocsById = async (id) => {
 
 export const getDocumentsByUserId = async (user_id) => {
   const [rows] = await pool.query(
-    `
-      select id, title, subtitle, body, status from documentos where user_id = ?
-    `,
+    `select id, title, subtitle, body, status from documentos where user_id = ?`,
     [user_id],
   );
 
@@ -61,10 +59,11 @@ export const createDocument = async ({
   body,
   status,
   user_id,
+  image,
 }) => {
   const [result] = await pool.query(
-    "insert into documentos (title, subtitle, body, status, user_id) values (?, ?, ?, ?, ?)",
-    [title, subtitle, body, status, user_id],
+    "insert into documentos (title, subtitle, body, status, user_id, image) values (?, ?, ?, ?, ?, ?)",
+    [title, subtitle, body, status, user_id, image],
   );
 
   return {
@@ -76,7 +75,20 @@ export const createDocument = async ({
       body,
       status,
       user_id,
+      image,
     },
+  };
+};
+
+export const increaseLikes = async (id) => {
+  const [result] = await pool.query(
+    `update documentos set likes = likes + 1 where id  ?`,
+    [id],
+  );
+  return {
+    message: `Documento ${id} ha aumentado en +1 like`,
+    id,
+    result,
   };
 };
 

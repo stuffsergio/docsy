@@ -28,6 +28,7 @@ app.use(
 );
 
 app.use(express.json());
+app.use("/uploads", express.static("src/uploads"));
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 

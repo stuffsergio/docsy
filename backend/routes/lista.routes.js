@@ -11,6 +11,7 @@ import {
   obtenerDocumentoPublicoPorId,
 } from "../controllers/lista.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import { uploadPhotoMiddleware } from "../middlewares/uploadPhotoMiddleware.js";
 
 const router = Router();
 
@@ -22,7 +23,7 @@ router.get("/lista/:id", obtenerDocumentoId);
 
 router.post("/lista/docs", authMiddleware, obtenerDocumentosPorIdUsuario);
 
-router.post("/lista", crearDocumento);
+router.post("/lista", uploadPhotoMiddleware, crearDocumento);
 
 router.put("/lista/:id", actualizarDocumento);
 
