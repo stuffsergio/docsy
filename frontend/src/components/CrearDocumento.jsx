@@ -219,11 +219,11 @@ export default function CrearDocumento({
                 id="body"
                 autoComplete="off"
                 autoCorrect="off"
-                rows={3}
+                rows={4}
                 ref={inputBodyRef}
                 value={form.body}
                 onChange={handleChange}
-                className="flex-1 px-3 py-1.5 text-base resize-none border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+                className="overflow-y-auto flex-1 px-3 py-1.5 text-base resize-none border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
               ></textarea>
             </div>
 
@@ -257,6 +257,11 @@ export default function CrearDocumento({
                   Eliminado
                 </option>
               </select>
+            </div>
+
+            <div>
+              <label htmlFor="image">Subir imagen</label>
+              <input type="image" name="" id="" />
             </div>
             {editando ? (
               <motion.div

@@ -15,7 +15,7 @@ export default function ConfirmarEliminar({
       />
       <motion.div
         {...fadeAnimation}
-        className="absolute z-20 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-4 p-10 bg-black"
+        className="fixed z-20 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 flex flex-col items-center justify-center gap-4 p-10 bg-black"
       >
         <div className="flex flex-col justify-center items-center gap-8">
           {/* TARJETA DOC */}

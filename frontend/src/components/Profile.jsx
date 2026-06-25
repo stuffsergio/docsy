@@ -37,7 +37,7 @@ export default function Profile({ isOpen, setIsOpen, location }) {
           <img
             src={img}
             alt="user avatar url"
-            className={`border w-10 h-auto rounded-full ${location === "/perfil" ? "border-white/70" : "border-transparent"} transition-all transform duration-150`}
+            className={`border md:w-10 w-7 h-auto rounded-full ${location === "/perfil" ? "border-white/70" : "border-transparent"} transition-all transform duration-150`}
           />
         )}
       </button>

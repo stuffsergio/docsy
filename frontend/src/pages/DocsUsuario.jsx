@@ -1,6 +1,7 @@
 import { useAuth } from "../context/AuthContext";
 import { Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useLenis } from "lenis/react";
 import { motion } from "framer-motion";
 import { mainAnimation } from "../utils/animation";
 
@@ -19,6 +20,21 @@ export default function DocsUsuario() {
   const [docEliminar, setDocEliminar] = useState(null);
   const [docEditar, setDocEditar] = useState(null);
   const [indexDoc, setIndexDoc] = useState(null);
+
+  const lenis = useLenis();
+  useEffect(() => {
+    const modalAbierto = isOpen || isOpenEliminar;
+
+    if (modalAbierto) {
+      lenis?.stop();
+    } else {
+      lenis?.start();
+    }
+
+    return () => {
+      lenis?.start();
+    };
+  }, [isOpen, isOpenEliminar, lenis]);
 
   if (isAuthenticated && !usuario) {
     return <p>Cargando perfil...</p>;
@@ -41,18 +57,21 @@ export default function DocsUsuario() {
   }
 
   return (
-    <motion.div {...mainAnimation} className="relative">
-      <h1 className="text-center py-8">
+    <motion.div
+      {...mainAnimation}
+      className={`relative md:w-[80dvw] sm:w-[90dvw] w-[95dvw] m-auto`}
+    >
+      <h1 className="md:text-xl sm:text-lg text-base text-center pt-10">
         Página para crear, editar y documentos del usuario autenticado
       </h1>
 
       {/* BARRA AYUDA */}
       {documentos.length !== 0 && (
-        <div className="w-[80dvw] m-auto flex flex-row justify-between items-center py-10 px-5">
+        <div className="md:w-[80dvw] sm:w-[90dvw] w-[95dvw] m-auto flex flex-row justify-between items-center py-10 px-5">
           <div className="flex flex-row items-center gap-5">
             <label htmlFor="buscar">
-              Buscar
-              <Search className="w-5 h-auto" />
+              <p className="md:flex hidden">Buscar</p>
+              <Search className="md:hidden flex w-5 h-auto" />
             </label>
             <input
               type="search"
@@ -65,14 +84,14 @@ export default function DocsUsuario() {
               onClick={() => setIsOpen(true)}
               className="group flex flex-row items-center gap-2 py-1.5 px-4 border border-[#1f1f1f]/60 bg-white text-black rounded-full hover:opacity-90 transition-all transform duration-250"
             >
-              <p>Nuevo</p>
+              <p className="sm:text-base text-sm">Nuevo</p>
               <Plus className="w-5 h-auto bg-[#111111] text-white rounded-full p-1 group-hover:translate-x-1 transition-all transform duration-350" />
             </button>
           </div>
         </div>
       )}
 
-      <div className="w-[80dvw] m-auto mb-10">
+      <div className="md:w-[80dvw] sm:w-[90dvw] w-[95dvw] m-auto pb-10">
         {/* DOCUMENTOS DEL USUARIO */}
         <div className="flex flex-col gap-1">
           {documentos.map((l, index) => (

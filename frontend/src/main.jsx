@@ -15,15 +15,16 @@ createRoot(document.getElementById("root")).render(
         <AnimatePresence mode="wait">
           <>
             <Toaster
-              offset={{ top: 30, right: 200 }}
+              position="bottom-center"
               options={{
                 duration: 3000,
                 fill: "#ffffff",
                 styles: { description: "text-black/80!" },
               }}
             />
-            <ReactLenis root />
-            <App />
+            <ReactLenis root>
+              <App />
+            </ReactLenis>
           </>
         </AnimatePresence>
       </BrowserRouter>
