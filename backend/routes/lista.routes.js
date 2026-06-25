@@ -9,6 +9,7 @@ import {
   totalDoc,
   obtenerDocumentosPublicos,
   obtenerDocumentoPublicoPorId,
+  aumentarLikes,
 } from "../controllers/lista.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
 import { uploadPhotoMiddleware } from "../middlewares/uploadPhotoMiddleware.js";
@@ -22,11 +23,16 @@ router.get("/lista/publicDocs/:id", obtenerDocumentoPublicoPorId);
 router.get("/lista/:id", obtenerDocumentoId);
 
 router.post("/lista/docs", authMiddleware, obtenerDocumentosPorIdUsuario);
+router.post("/lista", authMiddleware, uploadPhotoMiddleware, crearDocumento);
 
-router.post("/lista", uploadPhotoMiddleware, crearDocumento);
+router.put(
+  "/lista/:id",
+  authMiddleware,
+  uploadPhotoMiddleware,
+  actualizarDocumento,
+);
+router.put("/lista/likes/:id", authMiddleware, aumentarLikes);
 
-router.put("/lista/:id", actualizarDocumento);
-
-router.delete("/lista/:id", eliminarDocumento);
+router.delete("/lista/:id", authMiddleware, eliminarDocumento);
 
 export default router;

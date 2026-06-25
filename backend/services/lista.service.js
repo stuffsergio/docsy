@@ -62,7 +62,7 @@ export const createDocument = async ({
   image,
 }) => {
   const [result] = await pool.query(
-    "insert into documentos (title, subtitle, body, status, user_id, image) values (?, ?, ?, ?, ?, ?)",
+    "insert into documentos (title, subtitle, body, status, user_id, likes, image) values (?, ?, ?, ?, ?, 0, ?)",
     [title, subtitle, body, status, user_id, image],
   );
 
@@ -82,7 +82,7 @@ export const createDocument = async ({
 
 export const increaseLikes = async (id) => {
   const [result] = await pool.query(
-    `update documentos set likes = likes + 1 where id  ?`,
+    `update documentos set likes = likes + 1 where id = ?`,
     [id],
   );
   return {
@@ -92,20 +92,36 @@ export const increaseLikes = async (id) => {
   };
 };
 
-export const updateDocument = async (id, { title, subtitle, body, status }) => {
-  const [result] = await pool.query(
-    "update documentos set title = ?, subtitle = ?, body = ?, status = ? where id = ?",
-    [title, subtitle, body, status, id],
-  );
+export const updateDocument = async (
+  id,
+  { title, subtitle, body, status, image },
+) => {
+  let query = `
+    update documentos
+    set title = ?, subtitle = ?, body = ?, status = ?
+  `;
+
+  let values = [title, subtitle, body, status];
+
+  if (image) {
+    query += ", image = ?";
+    values.push(image);
+  }
+
+  query += " where id = ?";
+  values.push(id);
+
+  const [result] = await pool.query(query, values);
 
   return {
     message: "Documento actualizado correctamente",
     documento: {
-      id: result.insertId,
+      id,
       title,
       subtitle,
       body,
       status,
+      image,
     },
   };
 };

@@ -17,6 +17,9 @@ export const uploadPhotoMiddleware = (req, res, next) => {
       return res.status(400).json({ message: error.message });
     }
 
+    console.log("BODY MULTER:", req.body);
+    console.log("FILE MULTER:", req.file);
+
     next();
   });
 };

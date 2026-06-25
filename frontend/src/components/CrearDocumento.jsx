@@ -16,13 +16,14 @@ export default function CrearDocumento({
   salir,
   index,
 }) {
-  const { usuario, documentos } = useAuth();
+  const { usuario, documentos, token } = useAuth();
   const initialForm = {
     title: "",
     subtitle: "",
     body: "",
     status: "pendiente",
     user_id: usuario.id,
+    image: null,
   };
 
   const [form, setForm] = useState(initialForm);
@@ -47,6 +48,7 @@ export default function CrearDocumento({
         subtitle: docEditar.subtitle,
         body: docEditar.body,
         status: docEditar.status,
+        image: null,
       });
       setErrorData("");
     } else {
@@ -93,11 +95,24 @@ export default function CrearDocumento({
     }
 
     try {
+      const formData = new FormData();
+
+      formData.append("title", form.title);
+      formData.append("subtitle", form.subtitle);
+      formData.append("body", form.body);
+      formData.append("status", form.status);
+      formData.append("user_id", form.user_id);
+
+      if (form.image) formData.append("image", form.image);
+
       if (editando) {
-        await actualizarDocumento({
-          id: docEditar.id,
-          ...form,
-        });
+        await actualizarDocumento(
+          {
+            id: docEditar.id,
+            data: formData,
+          },
+          token,
+        );
 
         successToast(
           "Documento actualizado",
@@ -106,7 +121,7 @@ export default function CrearDocumento({
 
         setDocEditar(null);
       } else {
-        await crearDocumento(form);
+        await crearDocumento(formData, token);
         successToast(
           "Documento creado",
           "Se ha actualizado la lista de documentos",
@@ -261,7 +276,15 @@ export default function CrearDocumento({
 
             <div className="flex flex-row justify-between text-lg">
               <label htmlFor="image">Subir imagen</label>
-              <input type="file" src="" alt="image upload" className="border" />
+              <input
+                type="file"
+                name="image"
+                accept="image/*"
+                onChange={(e) =>
+                  setForm((prev) => ({ ...prev, image: e.target.files[0] }))
+                }
+                className="border"
+              />
             </div>
             {editando ? (
               <motion.div

@@ -12,8 +12,13 @@ import { eliminarDocumento } from "../api/listasApi";
 import { successToast } from "../utils/sileoToast";
 
 export default function DocsUsuario() {
-  const { isAuthenticated, usuario, documentos, cargarDocumentosUsuario } =
-    useAuth();
+  const {
+    isAuthenticated,
+    usuario,
+    documentos,
+    cargarDocumentosUsuario,
+    token,
+  } = useAuth();
 
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenEliminar, setIsOpenEliminar] = useState(false);
@@ -43,7 +48,7 @@ export default function DocsUsuario() {
   async function eliminarDoc(id) {
     console.log("Eliminando... id ", id);
     try {
-      const data = await eliminarDocumento(id);
+      const data = await eliminarDocumento(id, token);
       console.log(data);
 
       if (docEditar?.id === id) {

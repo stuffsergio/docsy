@@ -9,6 +9,7 @@ import {
   getTotalDoc,
   updateDocument,
   getPublicDocsById,
+  increaseLikes,
 } from "../services/lista.service.js";
 
 export const obtenerTodaLista = async (req, res, next) => {
@@ -78,10 +79,27 @@ export const obtenerDocumentosPorIdUsuario = async (req, res, next) => {
   }
 };
 
-export const crearDocumento = async (req, res, next) => {
-  const { title, subtitle, body, status, user_id } = req.body;
+export const aumentarLikes = async (req, res, next) => {
+  try {
+    const documentoEncontrado = await getPublicDocsById(req.params.id);
+    if (documentoEncontrado.length === 0)
+      return res.status(404).json({ message: "No existe ese documento" });
 
-  const image = req.file ? `/uploads/${req.file.filename}` : null;
+    const likes = await increaseLikes(req.params.id);
+    console.log(likes);
+    res.status(200).json(likes);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+export const crearDocumento = async (req, res, next) => {
+  console.log("BODY: ", req.body);
+  console.log("FILE: ", req.file);
+
+  const { title, subtitle, body, status, user_id } = req.body;
+  const image = req.file ? `/uploads/photos/${req.file.filename}` : null;
 
   try {
     const documento = await createDocument({
@@ -104,6 +122,7 @@ export const actualizarDocumento = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { title, subtitle, body, status } = req.body;
+    const image = req.file ? `/uploads/photos/${req.file.filename}` : undefined;
 
     const documento = await getDocumentById(id);
 
@@ -117,6 +136,7 @@ export const actualizarDocumento = async (req, res, next) => {
       subtitle,
       body,
       status,
+      image,
     });
     res.status(200).json(documentoActualizado);
   } catch (err) {
