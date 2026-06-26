@@ -24,7 +24,7 @@ export const getTotalDoc = async () => {
 
 export const getPublicDocs = async () => {
   const [rows] = await pool.query(`
-      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, u.id as user_id, u.name, u.email, u.role, u.avatar_img
+      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, u.id as user_id, u.name, u.email, u.role, u.avatar_img, d.likes, d.image
       from documentos d
       left join users u on d.user_id = u.id
       where d.status = 'publicado'

@@ -2,10 +2,14 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 import { useState, useEffect, useRef } from "react";
 import { crearDocumento, actualizarDocumento } from "../api/listasApi";
-import { fadeAnimation, fadeAnimation2 } from "../utils/animation";
+import {
+  fadeAnimation,
+  fadeAnimation2,
+  fadeAnimation3,
+} from "../utils/animation";
 import { successToast, errorToast } from "../utils/sileoToast";
-import { motion } from "framer-motion";
-import { ChevronLeft } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronLeft, UploadCloud, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 
 export default function CrearDocumento({
@@ -25,6 +29,8 @@ export default function CrearDocumento({
     user_id: usuario.id,
     image: null,
   };
+  const MAX_SIZE = 2 * 1024 * 1024;
+  const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
   const [form, setForm] = useState(initialForm);
   const editando = Boolean(docEditar);
@@ -33,10 +39,20 @@ export default function CrearDocumento({
   const inputTitleRef = useRef(null);
   const inputSubtitleRef = useRef(null);
   const inputBodyRef = useRef(null);
+  const inputFileRef = useRef(null);
+  const [preview, setPreview] = useState(null);
 
   const handleResetForm = () => {
     setDocEditar(null);
     setErrorData("");
+
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+    setPreview(null);
+    if (inputFileRef.current) {
+      inputFileRef.current.value = "";
+    }
 
     setForm(initialForm);
   };
@@ -48,7 +64,7 @@ export default function CrearDocumento({
         subtitle: docEditar.subtitle,
         body: docEditar.body,
         status: docEditar.status,
-        image: null,
+        image: docEditar.image,
       });
       setErrorData("");
     } else {
@@ -83,6 +99,54 @@ export default function CrearDocumento({
       [name]: value,
     }));
   };
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (!ALLOWED_TYPES.includes(file.type)) {
+      setErrorData("Formato no válido [JPEG, PNG, WEBP]");
+      e.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_SIZE) {
+      setErrorData("Imagen demasiado grande - máx 2 MB");
+      e.target.value = "";
+      return;
+    }
+
+    if (preview) {
+      URL.revokeObjectURL(preview);
+    }
+
+    const url = URL.createObjectURL(file);
+    setPreview(url);
+    setForm((prev) => ({
+      ...prev,
+      image: file,
+    }));
+  };
+
+  const removeImage = () => {
+    if (preview) URL.revokeObjectURL(preview);
+
+    setPreview(null);
+    setForm((prev) => ({
+      ...prev,
+      image: null,
+    }));
+
+    if (inputFileRef.current) {
+      inputFileRef.current.value = "";
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preview) URL.revokeObjectURL(preview);
+    };
+  }, [preview]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -132,7 +196,7 @@ export default function CrearDocumento({
       handleResetForm();
       salir();
     } catch (err) {
-      errorToast("Error", "Error creando/actulizando doc.");
+      errorToast("Error", "Error creando/actualizando doc.");
       setError("Error en la petición");
       console.error(err);
     }
@@ -190,7 +254,9 @@ export default function CrearDocumento({
               <p>Actualizando - {index + 1}</p>
             </motion.div>
           )}
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+            {/* INPUT TÍTULO */}
             <div className="flex flex-row justify-between text-lg">
               <label htmlFor="title" className="flex-1">
                 Título
@@ -208,6 +274,7 @@ export default function CrearDocumento({
               />
             </div>
 
+            {/* INPUT SUBTÍTULO */}
             <div className="flex flex-row justify-between text-lg">
               <label htmlFor="subtitle" className="flex-1">
                 Subtítulo
@@ -225,6 +292,7 @@ export default function CrearDocumento({
               />
             </div>
 
+            {/* INPUT CUERPO */}
             <div className="flex flex-row justify-between text-lg">
               <label htmlFor="body" className="flex-1">
                 Cuerpo
@@ -242,6 +310,7 @@ export default function CrearDocumento({
               ></textarea>
             </div>
 
+            {/* INPUT STATUS */}
             <div className="flex flex-row justify-between text-lg">
               <label htmlFor="status" className="flex-1">
                 Status
@@ -274,17 +343,116 @@ export default function CrearDocumento({
               </select>
             </div>
 
-            <div className="flex flex-row justify-between text-lg">
-              <label htmlFor="image">Subir imagen</label>
+            {/* INPUT FILE UPDATE */}
+            <div className="space-y-4">
               <input
+                ref={inputFileRef}
+                id="image"
                 type="file"
-                name="image"
-                accept="image/*"
-                onChange={(e) =>
-                  setForm((prev) => ({ ...prev, image: e.target.files[0] }))
-                }
-                className="border"
+                accept=".jpg,.jpeg,.png,.webp"
+                onChange={handleFileChange}
+                className="hidden"
               />
+
+              <AnimatePresence mode="wait">
+                {!preview ? (
+                  <motion.label
+                    key="upload"
+                    htmlFor="image"
+                    layout
+                    {...fadeAnimation3}
+                    className="group flex h-36 w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-white/20 bg-white/2 transition-all duration-300 hover:border-white/50 hover:bg-white/4"
+                  >
+                    <UploadCloud className="mb-3 h-8 w-8 text-white/40 transition-all duration-300 group-hover:-translate-y-1 group-hover:text-white" />
+
+                    <p className="font-medium">
+                      Arrastra una imagen o{" "}
+                      <span className="underline">selecciónala</span>
+                    </p>
+
+                    <p className="mt-1 text-sm text-white/40">
+                      JPEG · PNG · WEBP · máximo 2 MB
+                    </p>
+                  </motion.label>
+                ) : (
+                  <motion.div
+                    key="preview"
+                    layout
+                    initial={{
+                      opacity: 0,
+                      y: 10,
+                    }}
+                    animate={{
+                      opacity: 1,
+                      y: 0,
+                    }}
+                    exit={{
+                      opacity: 0,
+                      y: -10,
+                    }}
+                    transition={{
+                      duration: 0.28,
+                    }}
+                    className="rounded-xl border border-white/15 bg-white/3 p-4"
+                  >
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={preview}
+                        alt={form.image?.name}
+                        className="h-20 w-20 rounded-lg object-cover ring-1 ring-white/10"
+                      />
+
+                      <div className="flex-1">
+                        <p className="font-medium">{form.image?.name}</p>
+
+                        <p className="mt-1 text-sm text-white/40">
+                          {(form.image.size / 1024 / 1024).toFixed(2)} MB
+                        </p>
+
+                        <div className="mt-4 flex items-center gap-6">
+                          <label
+                            htmlFor="image"
+                            className="cursor-pointer text-sm text-white/60 transition-colors hover:text-white"
+                          >
+                            Cambiar imagen
+                          </label>
+
+                          <button
+                            type="button"
+                            onClick={removeImage}
+                            className="text-sm text-[#FF2D55] hover:opacity-80 transition-all"
+                          >
+                            Eliminar
+                          </button>
+                        </div>
+                      </div>
+
+                      <motion.button
+                        whileHover={{
+                          rotate: 90,
+                          scale: 1.1,
+                        }}
+                        whileTap={{
+                          scale: 0.9,
+                        }}
+                        type="button"
+                        onClick={removeImage}
+                        className="
+              self-start
+              rounded-full
+              p-2
+              text-white/40
+              transition-colors
+              hover:bg-white/10
+              hover:text-white
+            "
+                      >
+                        <X size={16} />
+                      </motion.button>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
             {editando ? (
               <motion.div

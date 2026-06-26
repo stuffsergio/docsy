@@ -86,7 +86,7 @@ export default function NavBar() {
             ) : (
               <Link
                 to="/publicDocs"
-                className={`group flex flex-row items-center gap-1 hover:opacity-100 ${location.pathname === "/docs" ? "opacity-100" : "opacity-65"} transition-all transform duration-200`}
+                className={`group flex flex-row items-center gap-1 hover:opacity-100 ${location.pathname === "/publicDocs" ? "opacity-100" : "opacity-65"} transition-all transform duration-200`}
               >
                 <span className="group-hover:-translate-x-1 transition-all transform duration-200">
                   {"{"}

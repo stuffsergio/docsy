@@ -93,7 +93,7 @@ export default function PublicDocs() {
         </div>
       ) : (
         <div className="w-[80dvw] m-auto mb-10">
-          <ul className="grid lg:grid-cols-3 grid-cols-2 gap-1">
+          <ul className="grid lg:grid-cols-3 grid-cols-2 gap-3">
             {lista.map((l, index) => (
               <Lista
                 key={l.id}
@@ -102,6 +102,8 @@ export default function PublicDocs() {
                 title={l.title}
                 subtitle={l.subtitle}
                 body={l.body}
+                likes={l.likes}
+                image={l.image}
                 usuario={{
                   id: l.user_id,
                   name: l.name,

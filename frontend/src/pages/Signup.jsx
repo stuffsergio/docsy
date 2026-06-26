@@ -79,7 +79,7 @@ export default function Signup() {
         onSubmit={handleSubmit}
         className="w-80 flex flex-col gap-6 mt-0 px-5 py-10"
       >
-        <div className="flex flex-row justify-between items-center gap-10 text-lg">
+        <div className="w-full flex flex-col justify-center items-start gap-2 text-lg">
           <label htmlFor="name" className="flex-1">
             Nombre
           </label>
@@ -87,13 +87,14 @@ export default function Signup() {
             type="text"
             name="name"
             id="name"
+            placeholder="Jhon Ternus"
             ref={nombreInputRef}
             value={form.name}
             onChange={handleChange}
-            className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+            className="w-full flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
           />
         </div>
-        <div className="flex flex-row justify-between items-center gap-10 text-lg">
+        <div className="w-full flex flex-col justify-center items-start gap-2 text-lg">
           <label htmlFor="email" className="flex-1">
             Email
           </label>
@@ -101,13 +102,14 @@ export default function Signup() {
             type="email"
             name="email"
             id="email"
+            placeholder="jhon-ternus@gmail.com"
             ref={emailInputRef}
             value={form.email}
             onChange={handleChange}
-            className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+            className="w-full flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
           />
         </div>
-        <div className="w-full flex flex-row justify-center items-start gap-2 text-lg">
+        <div className="w-full flex flex-col justify-center items-start gap-2 text-lg">
           <label htmlFor="contraseña" className="px-0">
             Contraseña
           </label>
