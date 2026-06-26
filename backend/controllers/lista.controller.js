@@ -11,6 +11,7 @@ import {
   getPublicDocsById,
   increaseLikes,
 } from "../services/lista.service.js";
+import { processDocumentImage } from "../utils/imageProcessor.js";
 
 export const obtenerTodaLista = async (req, res, next) => {
   try {
@@ -81,7 +82,7 @@ export const obtenerDocumentosPorIdUsuario = async (req, res, next) => {
 
 export const aumentarLikes = async (req, res, next) => {
   try {
-    const documentoEncontrado = await getPublicDocsById(req.params.id);
+    const documentoEncontrado = await getDocumentById(req.params.id);
     if (documentoEncontrado.length === 0)
       return res.status(404).json({ message: "No existe ese documento" });
 
@@ -95,13 +96,17 @@ export const aumentarLikes = async (req, res, next) => {
 };
 
 export const crearDocumento = async (req, res, next) => {
-  console.log("BODY: ", req.body);
-  console.log("FILE: ", req.file);
-
-  const { title, subtitle, body, status, user_id } = req.body;
-  const image = req.file ? `/uploads/photos/${req.file.filename}` : null;
-
   try {
+    const { title, subtitle, body, status, user_id } = req.body;
+    let image = null;
+    let image_thumb = null;
+
+    if (req.file) {
+      const processedImage = await processDocumentImage(req.file);
+      image = processedImage.image;
+      image_thumb = processedImage.image_thumb;
+    }
+
     const documento = await createDocument({
       title,
       subtitle,
@@ -109,6 +114,7 @@ export const crearDocumento = async (req, res, next) => {
       status,
       user_id,
       image,
+      image_thumb,
     });
     console.log(documento);
     res.status(200).json(documento);
@@ -122,14 +128,19 @@ export const actualizarDocumento = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { title, subtitle, body, status } = req.body;
-    const image = req.file ? `/uploads/photos/${req.file.filename}` : undefined;
+    let image;
+    let image_thumb;
+
+    if (req.file) {
+      const processedImage = await processDocumentImage(req.file);
+      image = processedImage.image;
+      image_thumb = processedImage.image_thumb;
+    }
 
     const documento = await getDocumentById(id);
 
     if (documento.length === 0)
       return res.status(404).json({ message: `No existe doc. con id ${id}` });
-    console.log("Documento anterior que se ha pedido actualizar");
-    console.log(documento);
 
     const documentoActualizado = await updateDocument(id, {
       title,
@@ -137,7 +148,9 @@ export const actualizarDocumento = async (req, res, next) => {
       body,
       status,
       image,
+      image_thumb,
     });
+    console.log(documentoActualizado);
     res.status(200).json(documentoActualizado);
   } catch (err) {
     console.log(err);

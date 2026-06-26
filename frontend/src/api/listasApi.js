@@ -56,12 +56,13 @@ export const listarDocumentosPorUsuarioId = async (token) => {
 
 export const aumentarLikes = async (id, token) => {
   try {
+    console.log("ID que llega: " + id);
     const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/lista/like/${id}`,
+      `${import.meta.env.VITE_BACKEND_URL}/api/lista/likes/${id}`,
       {
         method: "PUT",
         headers: {
-          "Content-Type: ": "application/json",
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       },

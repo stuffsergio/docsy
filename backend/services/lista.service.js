@@ -1,4 +1,5 @@
 import { pool } from "../db/connection.js";
+import { deleteImage } from "../utils/deleteImage.js";
 
 export const getAllLista = async () => {
   const [rows] = await pool.query("select * from documentos");
@@ -24,7 +25,7 @@ export const getTotalDoc = async () => {
 
 export const getPublicDocs = async () => {
   const [rows] = await pool.query(`
-      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, u.id as user_id, u.name, u.email, u.role, u.avatar_img, d.likes, d.image
+      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img
       from documentos d
       left join users u on d.user_id = u.id
       where d.status = 'publicado'
@@ -34,7 +35,7 @@ export const getPublicDocs = async () => {
 export const getPublicDocsById = async (id) => {
   const [rows] = await pool.query(
     `
-      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, u.id as user_id, u.name, u.email, u.role, u.avatar_img
+      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img
       from documentos d
       left join users u on d.user_id = u.id
       where d.id = ? AND d.status = 'publicado'
@@ -46,7 +47,7 @@ export const getPublicDocsById = async (id) => {
 
 export const getDocumentsByUserId = async (user_id) => {
   const [rows] = await pool.query(
-    `select id, title, subtitle, body, status from documentos where user_id = ?`,
+    `select id, title, subtitle, body, status, likes, image, image_thumb from documentos where user_id = ?`,
     [user_id],
   );
 
@@ -60,10 +61,11 @@ export const createDocument = async ({
   status,
   user_id,
   image,
+  image_thumb,
 }) => {
   const [result] = await pool.query(
-    "insert into documentos (title, subtitle, body, status, user_id, likes, image) values (?, ?, ?, ?, ?, 0, ?)",
-    [title, subtitle, body, status, user_id, image],
+    "insert into documentos (title, subtitle, body, status, user_id, likes, image, image_thumb) values (?, ?, ?, ?, ?, 0, ?, ?)",
+    [title, subtitle, body, status, user_id, image, image_thumb],
   );
 
   return {
@@ -76,6 +78,7 @@ export const createDocument = async ({
       status,
       user_id,
       image,
+      image_thumb,
     },
   };
 };
@@ -94,8 +97,15 @@ export const increaseLikes = async (id) => {
 
 export const updateDocument = async (
   id,
-  { title, subtitle, body, status, image },
+  { title, subtitle, body, status, image, image_thumb },
 ) => {
+  const documentoAnterior = await getDocumentById(id);
+
+  if (documentoAnterior.length === 0) return null;
+
+  const oldImage = documentoAnterior[0].image;
+  const oldThumb = documentoAnterior[0].image_thumb;
+
   let query = `
     update documentos
     set title = ?, subtitle = ?, body = ?, status = ?
@@ -104,14 +114,20 @@ export const updateDocument = async (
   let values = [title, subtitle, body, status];
 
   if (image) {
-    query += ", image = ?";
-    values.push(image);
+    query += ", image = ?, image_thumb = ?";
+    values.push(image, image_thumb);
   }
 
   query += " where id = ?";
   values.push(id);
 
   const [result] = await pool.query(query, values);
+
+  // Eliminimos las images antiguas solo después de actualizar
+  if (image) {
+    await deleteImage(oldImage);
+    await deleteImage(oldThumb);
+  }
 
   return {
     message: "Documento actualizado correctamente",
@@ -122,14 +138,23 @@ export const updateDocument = async (
       body,
       status,
       image,
+      image_thumb,
     },
   };
 };
 
 export const deleteDocument = async (id) => {
+  const documento = await getDocumentById(id);
+  if (documento.length === 0) return null;
+
+  const { image, image_thumb } = documento[0];
+
   const [result] = await pool.query("delete from documentos where id = ?", [
     id,
   ]);
+
+  await deleteImage(image);
+  await deleteImage(image_thumb);
 
   return {
     message: "Documento eliminado correctamente",

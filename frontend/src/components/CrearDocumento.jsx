@@ -64,8 +64,15 @@ export default function CrearDocumento({
         subtitle: docEditar.subtitle,
         body: docEditar.body,
         status: docEditar.status,
-        image: docEditar.image,
+        image: null,
       });
+
+      if (docEditar.image) {
+        setPreview(`${import.meta.env.VITE_BACKEND_URL}${docEditar.image}`);
+      } else {
+        setPreview(null);
+      }
+
       setErrorData("");
     } else {
       handleResetForm();
@@ -398,16 +405,20 @@ export default function CrearDocumento({
                     <div className="flex items-center gap-4">
                       <img
                         src={preview}
-                        alt={form.image?.name}
+                        alt={"imagen documento"}
                         className="h-20 w-20 rounded-lg object-cover ring-1 ring-white/10"
                       />
 
                       <div className="flex-1">
-                        <p className="font-medium">{form.image?.name}</p>
-
-                        <p className="mt-1 text-sm text-white/40">
-                          {(form.image.size / 1024 / 1024).toFixed(2)} MB
+                        <p className="font-medium">
+                          {form.image?.name || "Imagen actual"}
                         </p>
+
+                        {form.image && (
+                          <p className="mt-1 text-sm text-white/40">
+                            {(form.image.size / 1024 / 1024).toFixed(2)} MB
+                          </p>
+                        )}
 
                         <div className="mt-4 flex items-center gap-6">
                           <label

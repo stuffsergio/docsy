@@ -14,9 +14,12 @@ export default function Lista({
   status,
   likes,
   image,
+  image_thumb,
+
   loading,
   cargar,
   setQuienEliminar,
+  darLike,
 
   usuario,
 }) {
@@ -34,18 +37,73 @@ export default function Lista({
       <li className="flex flex-col justify-between gap-4 bg-[#111111]">
         {/* HEADER */}
         {location.pathname === "/publicDocs" && (
-          <div className="relative h-52 overflow-hidden">
-            {image ? (
+          <div
+            className="
+      relative
+      h-52
+      overflow-hidden
+      group
+    "
+          >
+            {(image || image_thumb) && (
               <>
-                <img
-                  src={`${import.meta.env.VITE_BACKEND_URL}${image}`}
-                  alt="doc image"
-                  className="w-full h-full object-cover mask-b-from-60% mask-b-to-90%"
+                <motion.img
+                  src={`${import.meta.env.VITE_BACKEND_URL}${image_thumb || image}`}
+                  alt={`${import.meta.env.VITE_BACKEND_URL}${image_thumb}`}
+                  onError={(e) => {
+                    console.log("ERROR IMAGEN");
+                    console.log(e.currentTarget.src);
+                  }}
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  transition={{
+                    duration: 0.5,
+                  }}
+                  className="
+            w-full
+            h-full
+            object-cover
+
+            transition-transform
+
+            duration-500
+          "
                 />
-                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[#111111]" />
+
+                {/* Gradient inferior estilo Linear */}
+                <div
+                  className="
+            absolute
+            inset-0
+
+            bg-linear-to-b
+
+            from-transparent
+
+            via-transparent
+
+            to-[#111111]
+
+          "
+                />
+
+                {/* pequeño brillo al hover */}
+                <div
+                  className="
+            absolute
+            inset-0
+
+            bg-white/0
+
+            group-hover:bg-white/5
+
+            transition-all
+
+            duration-500
+          "
+                />
               </>
-            ) : (
-              <></>
             )}
           </div>
         )}
@@ -103,6 +161,7 @@ export default function Lista({
                 <div className="flex flex-row items-center gap-2 opacity-70">
                   {likes !== 0 && <span className="text-xs">{likes}</span>}
                   <motion.button
+                    onClick={() => darLike(id)}
                     whileHover={{ y: -3, x: -1, rotate: -10 }}
                     whileTap={{ y: 1, x: 1, rotate: 5 }}
                   >

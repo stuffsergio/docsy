@@ -4,12 +4,14 @@ import Lista from "../components/Lista";
 
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { getDocsPublic } from "../api/listasApi";
+import { aumentarLikes, getDocsPublic } from "../api/listasApi";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { mainAnimation } from "../utils/animation";
+import { useAuth } from "../context/AuthContext";
 
 export default function PublicDocs() {
+  const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [docs, setDocs] = useState([]);
 
@@ -34,6 +36,18 @@ export default function PublicDocs() {
   useEffect(() => {
     obtenerLista();
   }, []);
+
+  async function handleLike(id) {
+    try {
+      console.log("ID que recibe: " + typeof id);
+      const data = await aumentarLikes(id, token);
+      console.log(data);
+      console.log("Has dado me gusta al documento " + id);
+    } catch (err) {
+      console.log("Error al dar me gusta");
+      console.log(err);
+    }
+  }
 
   useEffect(() => {
     // Debounce para actualizar la URL
@@ -104,6 +118,8 @@ export default function PublicDocs() {
                 body={l.body}
                 likes={l.likes}
                 image={l.image}
+                image_thumb={l.image_thumb}
+                darLike={handleLike}
                 usuario={{
                   id: l.user_id,
                   name: l.name,
