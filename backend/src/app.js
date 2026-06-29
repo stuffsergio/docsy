@@ -12,8 +12,6 @@ import { notFound } from "../middlewares/notFound.js";
 
 const app = express();
 
-const swaggerDocument = YAML.load("./src/docs/openapi.yaml");
-
 const globalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 100 peticiones cada 15 minutos por IP
   max: 100,
@@ -23,7 +21,8 @@ const globalLimiter = rateLimit({
 
 app.use(
   cors({
-    // origin: process.env.FRONTEND_URL,
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
   }),
 );
 
@@ -34,8 +33,6 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/uploads", express.static("src/uploads"));
-
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use("/api", listaRoutes);
 app.use("/api", userRoutes);
