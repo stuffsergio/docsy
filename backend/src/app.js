@@ -28,6 +28,11 @@ app.use(
 );
 
 app.use(express.json());
+
+app.get("/api/health", (req, res) => {
+  res.send("Backend funcionandoo...");
+});
+
 app.use("/uploads", express.static("src/uploads"));
 
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));

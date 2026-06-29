@@ -4,10 +4,6 @@ import { pool } from "../db/connection.js";
 
 const PORT = process.env.PORT || 3000;
 
-app.get("/api/health", (req, res) => {
-  res.send("Backend funcionandoo...");
-});
-
 async function testConnection() {
   const [rows] = await pool.query("select 1 + 1 as result");
   console.log("Conexión MySQL establecida: " + rows[0].result);
