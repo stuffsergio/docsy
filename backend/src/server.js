@@ -2,7 +2,7 @@ import "dotenv/config";
 import app from "./app.js";
 import { pool } from "../db/connection.js";
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.get("/api/health", (req, res) => {
   res.send("Backend funcionandoo...");
@@ -14,7 +14,7 @@ async function testConnection() {
 }
 testConnection();
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log("Servidor running at localhost:", PORT);
   console.log(process.env.FRONTEND_URL);
 });
