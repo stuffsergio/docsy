@@ -1,18 +1,23 @@
-import fs from "fs/promises";
-import path from "path";
+import { v2 as cloudinary } from "cloudinary";
 
-const uploadDir = path.join(process.cwd(), "src", "uploads", "photos");
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-export async function deleteImage(fileName) {
-  if (!fileName) return;
-
-  const filePath = path.join(uploadDir, fileName);
+export async function deleteImage(imageUrl) {
+  if (!imageUrl) return;
 
   try {
-    await fs.unlink(filePath);
+    // Extrae el public_id desde la URL de Cloudinary
+    // Ejemplo URL: https://res.cloudinary.com/cloud/image/upload/v123/photos/thumb_uuid.webp
+    const matches = imageUrl.match(/\/upload\/(?:v\d+\/)?(.+)\.\w+$/);
+    if (!matches) return;
+
+    const publicId = matches[1]; // → "photos/thumb_uuid"
+    await cloudinary.uploader.destroy(publicId);
   } catch (error) {
-    if (error.code === "ENOENT") {
-      console.error("Error eliminando imagen: ", error);
-    }
+    console.error("Error eliminando imagen de Cloudinary:", error);
   }
 }
