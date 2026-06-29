@@ -54,27 +54,6 @@ export const listarDocumentosPorUsuarioId = async (token) => {
   }
 };
 
-export const aumentarLikes = async (id, token) => {
-  try {
-    console.log("ID que llega: " + id);
-    const res = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/api/lista/likes/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      },
-    );
-    const data = await res.json();
-    console.log(data);
-    return data;
-  } catch (err) {
-    console.log(err);
-  }
-};
-
 export const crearDocumento = async (formData, token) => {
   try {
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/api/lista`, {
@@ -127,6 +106,47 @@ export const eliminarDocumento = async (id, token) => {
     return data;
   } catch (err) {
     console.log("Error");
+    console.log(err);
+  }
+};
+
+// GESTIÓN LIKES
+export const aumentarLikes = async (id, token) => {
+  try {
+    console.log("ID que llega: " + id);
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/lista/likes/${id}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const retirarLike = async (id, token) => {
+  try {
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/api/lista/${id}/like`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
+
+    const data = await res.json();
+    return data;
+  } catch (err) {
     console.log(err);
   }
 };

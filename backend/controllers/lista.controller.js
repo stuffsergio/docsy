@@ -9,7 +9,9 @@ import {
   getTotalDoc,
   updateDocument,
   getPublicDocsById,
-  increaseLikes,
+  likeDocument,
+  unlikeDocument,
+  getUserLikedDocuments,
 } from "../services/lista.service.js";
 import { processDocumentImage } from "../utils/imageProcessor.js";
 
@@ -49,7 +51,8 @@ export const totalDoc = async (req, res, next) => {
 
 export const obtenerDocumentosPublicos = async (req, res, next) => {
   try {
-    const docs = await getPublicDocs();
+    const userId = req.user?.id || null;
+    const docs = await getPublicDocs(userId);
     res.status(200).json(docs);
   } catch (err) {
     next(err);
@@ -57,7 +60,8 @@ export const obtenerDocumentosPublicos = async (req, res, next) => {
 };
 export const obtenerDocumentoPublicoPorId = async (req, res, next) => {
   try {
-    const doc = await getPublicDocsById(req.params.id);
+    const userId = req.user?.id || null;
+    const doc = await getPublicDocsById(req.params.id, userId);
     res.status(200).json(doc);
   } catch (err) {
     next(err);
@@ -162,6 +166,44 @@ export const eliminarDocumento = async (req, res, next) => {
   try {
     const doc = await deleteDocument(req.params.id);
     res.status(200).json(doc);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+// GESTIÓN DE LIKES - RED SOCIAL
+export const obtenerLikesUsuario = async (req, res, next) => {
+  try {
+    const docs = await getUserLikedDocuments(req.user.id);
+
+    res.status(200).json(docs);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+export const likeContadorControl = async (req, res, next) => {
+  try {
+    const documentId = req.params.id;
+    const userId = req.user.id;
+    const result = await likeDocument(documentId, userId);
+
+    res.status(200).json(result);
+  } catch (err) {
+    console.log(err);
+    next(err);
+  }
+};
+
+export const unlikeControl = async (req, res, next) => {
+  try {
+    const documentId = req.params.id;
+    const userId = req.user.id;
+    const result = await unlikeDocument(documentId, userId);
+
+    res.status(200).json(result);
   } catch (err) {
     console.log(err);
     next(err);

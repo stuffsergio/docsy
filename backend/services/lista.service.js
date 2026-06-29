@@ -23,24 +23,51 @@ export const getTotalDoc = async () => {
   return rows[0].total_documentos;
 };
 
-export const getPublicDocs = async () => {
-  const [rows] = await pool.query(`
-      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img
-      from documentos d
-      left join users u on d.user_id = u.id
-      where d.status = 'publicado'
-    `);
-  return rows;
-};
-export const getPublicDocsById = async (id) => {
+export const getPublicDocs = async (userId) => {
   const [rows] = await pool.query(
     `
       select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img
+      
+      case
+        when dl.id in not null then 1
+        else 0
+      end as user_liked
+      
       from documentos d
       left join users u on d.user_id = u.id
+
+      left join document_likes dl
+      
+      on d.id = dl.document_id
+      and dl.user_id = ?
+
+      where d.status = 'publicado'
+    `,
+    userId,
+  );
+  return rows;
+};
+export const getPublicDocsById = async (id, userId) => {
+  const [rows] = await pool.query(
+    `
+      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img
+      
+      case
+        when dl.id is not null then 1
+        else 0
+      end as user_liked
+      
+      from documentos d
+      left join users u on d.user_id = u.id
+
+      left join document_likes dl
+
+      on d.id = dl.document_id
+      and dl.user_id = ?
+
       where d.id = ? AND d.status = 'publicado'
     `,
-    [id],
+    [userId, id],
   );
   return rows[0];
 };
@@ -83,18 +110,6 @@ export const createDocument = async ({
   };
 };
 
-export const increaseLikes = async (id) => {
-  const [result] = await pool.query(
-    `update documentos set likes = likes + 1 where id = ?`,
-    [id],
-  );
-  return {
-    message: `Documento ${id} ha aumentado en +1 like`,
-    id,
-    result,
-  };
-};
-
 export const updateDocument = async (
   id,
   { title, subtitle, body, status, image, image_thumb },
@@ -109,7 +124,7 @@ export const updateDocument = async (
   let query = `
     update documentos
     set title = ?, subtitle = ?, body = ?, status = ?
-  `;
+    `;
 
   let values = [title, subtitle, body, status];
 
@@ -159,5 +174,80 @@ export const deleteDocument = async (id) => {
   return {
     message: "Documento eliminado correctamente",
     id,
+  };
+};
+
+// GESTIÓN DE LIKES - RED SOCIAL
+export const likeDocument = async (documentId, userId) => {
+  const [exists] = await pool.query(
+    `
+    select * from document_likes where user_id = ? and document_id = ?
+  `,
+    [userId, documentId],
+  );
+
+  if (exists.length > 0) {
+    return { message: "Ya existe ese like" };
+  }
+
+  // relac. usuario-documento
+  await pool.query(
+    `
+        insert into document_likes(user_id, document_id) values(?, ?)
+      `,
+    [userId, documentId],
+  );
+
+  // aumentar contador likes
+  await pool.query(
+    `
+        update documentos set likes = likes + 1 where id = ?
+      `,
+    [documentId],
+  );
+
+  return {
+    message: "Like guardado",
+    documentId,
+    userId,
+  };
+};
+
+export const getUserLikedDocuments = async (userId) => {
+  const [rows] = await pool.query(
+    `
+        select documentos.* from documentos
+        inner join document_likes
+        on documentos.id = document_likes.document_id
+        where document_likes.user_id = ?
+      `,
+    [userId],
+  );
+
+  return rows;
+};
+
+export const unlikeDocument = async (documentId, userId) => {
+  await pool.query(
+    `
+      delete from document_likes
+      where user_id = ?
+      and document_id = ?
+    `,
+    [userId, documentId],
+  );
+
+  await pool.query(
+    `
+        update documentos set likes = likes - 1
+        where id = ?
+      `,
+    [documentId],
+  );
+
+  return {
+    message: "Document unliked",
+    documentId,
+    userId,
   };
 };

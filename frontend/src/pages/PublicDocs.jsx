@@ -71,6 +71,19 @@ export default function PublicDocs() {
     );
   }, [docs, q]);
 
+  const userLike = [
+    true,
+    false,
+    true,
+    false,
+    true,
+    false,
+    false,
+    true,
+    true,
+    true,
+  ];
+
   return (
     <motion.div {...mainAnimation} className="relative">
       <h1 className="text-center py-8">
@@ -107,7 +120,7 @@ export default function PublicDocs() {
         </div>
       ) : (
         <div className="w-[80dvw] m-auto mb-10">
-          <ul className="grid lg:grid-cols-3 grid-cols-2 gap-3">
+          <ul className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-3">
             {lista.map((l, index) => (
               <Lista
                 key={l.id}
@@ -128,6 +141,7 @@ export default function PublicDocs() {
                   avatar_img: l.avatar_img,
                 }}
                 loading={loading}
+                usersLike={userLike[index]}
               />
             ))}
           </ul>

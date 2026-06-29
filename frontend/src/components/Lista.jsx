@@ -22,6 +22,7 @@ export default function Lista({
   darLike,
 
   usuario,
+  usersLike,
 }) {
   const [showMenu, setShowMenu] = useState(false);
 
@@ -34,17 +35,10 @@ export default function Lista({
 
   return (
     <div className="p-px bg-linear-to-b from-0% from-white/30 via-40% via-white/10 to-[#1f1f1f]">
-      <li className="flex flex-col justify-between gap-4 bg-[#111111]">
+      <li className="h-full flex flex-col justify-between gap-4 bg-[#111111]">
         {/* HEADER */}
         {location.pathname === "/publicDocs" && (
-          <div
-            className="
-      relative
-      h-52
-      overflow-hidden
-      group
-    "
-          >
+          <div className="relative h-52 overflow-hidden group">
             {(image || image_thumb) && (
               <>
                 <motion.img
@@ -60,54 +54,19 @@ export default function Lista({
                   transition={{
                     duration: 0.5,
                   }}
-                  className="
-            w-full
-            h-full
-            object-cover
-
-            transition-transform
-
-            duration-500
-          "
+                  className="w-full h-full object-cover  transition-transform  duration-500"
                 />
 
                 {/* Gradient inferior estilo Linear */}
-                <div
-                  className="
-            absolute
-            inset-0
-
-            bg-linear-to-b
-
-            from-transparent
-
-            via-transparent
-
-            to-[#111111]
-
-          "
-                />
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-[#111111]" />
 
                 {/* pequeño brillo al hover */}
-                <div
-                  className="
-            absolute
-            inset-0
-
-            bg-white/0
-
-            group-hover:bg-white/5
-
-            transition-all
-
-            duration-500
-          "
-                />
+                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-500" />
               </>
             )}
           </div>
         )}
-        <div className="flex flex-col gap-0.5 p-5">
+        <div className="flex flex-col flex-1 gap-0.5 p-5">
           <div className="flex flex-col">
             {/* TITLE */}
             <div className="flex flex-row justify-between items-center">
@@ -123,7 +82,7 @@ export default function Lista({
 
             {/* BODY */}
             <div className="mt-4">
-              <p className="text-sm opacity-85 pr-2.5 md:line-clamp-3">
+              <p className="text-sm opacity-85 pr-2.5 md:line-clamp-3 line-clamp-2">
                 {body}
               </p>
             </div>
@@ -159,13 +118,15 @@ export default function Lista({
                   <ArrowRight className="w-3.5 h-auto opacity-0 group-hover:opacity-100 transition-all transform duration-300" />
                 </div>
                 <div className="flex flex-row items-center gap-2 opacity-70">
-                  {likes !== 0 && <span className="text-xs">{likes}</span>}
+                  {likes !== 0 && <span className={`text-xs`}>{likes}</span>}
                   <motion.button
                     onClick={() => darLike(id)}
                     whileHover={{ y: -3, x: -1, rotate: -10 }}
                     whileTap={{ y: 1, x: 1, rotate: 5 }}
                   >
-                    <ThumbsUp className="w-3.5 h-auto" />
+                    <ThumbsUp
+                      className={`w-3.5 h-auto ${usersLike ? "bg-blue-500" : "bg-transparent"}`}
+                    />
                   </motion.button>
                 </div>
               </div>
