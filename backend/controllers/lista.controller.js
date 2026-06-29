@@ -70,7 +70,6 @@ export const obtenerDocumentoPublicoPorId = async (req, res, next) => {
 
 export const obtenerDocumentosPorIdUsuario = async (req, res, next) => {
   try {
-    console.log(req.user);
     const documentosUsuario = await getDocumentsByUserId(req.user.id);
 
     if (documentosUsuario.length === 0) return res.status(200).json([]);
@@ -91,7 +90,6 @@ export const aumentarLikes = async (req, res, next) => {
       return res.status(404).json({ message: "No existe ese documento" });
 
     const likes = await increaseLikes(req.params.id);
-    console.log(likes);
     res.status(200).json(likes);
   } catch (err) {
     console.log(err);
@@ -120,7 +118,6 @@ export const crearDocumento = async (req, res, next) => {
       image,
       image_thumb,
     });
-    console.log(documento);
     res.status(200).json(documento);
   } catch (err) {
     console.log(err);
@@ -154,7 +151,6 @@ export const actualizarDocumento = async (req, res, next) => {
       image,
       image_thumb,
     });
-    console.log(documentoActualizado);
     res.status(200).json(documentoActualizado);
   } catch (err) {
     console.log(err);

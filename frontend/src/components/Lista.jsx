@@ -66,8 +66,8 @@ export default function Lista({
             )}
           </div>
         )}
-        <div className="flex flex-col flex-1 gap-0.5 p-5">
-          <div className="flex flex-col">
+        <div className="flex flex-col justify-between flex-1 gap-0.5 p-5">
+          <div className="flex flex-col justify-between">
             {/* TITLE */}
             <div className="flex flex-row justify-between items-center">
               <h3 className="text-xl font-bold">{title}</h3>

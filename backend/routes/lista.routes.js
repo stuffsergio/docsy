@@ -15,6 +15,7 @@ import {
   obtenerLikesUsuario,
 } from "../controllers/lista.controller.js";
 import authMiddleware from "../middlewares/authMiddleware.js";
+import optionalAuthMiddleware from "../middlewares/optionalAuthMiddleware.js";
 import { uploadPhotoMiddleware } from "../middlewares/uploadPhotoMiddleware.js";
 
 const router = Router();
@@ -22,8 +23,16 @@ const router = Router();
 // CRUD - GETTERS
 router.get("/lista", obtenerTodaLista);
 router.get("/lista/total", totalDoc);
-router.get("/lista/publicDocs", obtenerDocumentosPublicos);
-router.get("/lista/publicDocs/:id", obtenerDocumentoPublicoPorId);
+router.get(
+  "/lista/publicDocs",
+  optionalAuthMiddleware,
+  obtenerDocumentosPublicos,
+);
+router.get(
+  "/lista/publicDocs/:id",
+  optionalAuthMiddleware,
+  obtenerDocumentoPublicoPorId,
+);
 router.get("/lista/:id", obtenerDocumentoId);
 
 router.post("/lista/docs", authMiddleware, obtenerDocumentosPorIdUsuario);

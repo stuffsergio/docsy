@@ -50,7 +50,7 @@ export const getPublicDocs = async (userId) => {
 export const getPublicDocsById = async (id, userId) => {
   const [rows] = await pool.query(
     `
-      select d.id, d.title, d.subtitle, d.body, d.status, d.created_at, d.likes, d.image, d.image_thumb, u.id as user_id, u.name, u.email, u.role, u.avatar_img,
+      select d.*, u.id as user_id, u.name, u.email, u.role, u.avatar_img,
       
       case
         when dl.id is not null then 1

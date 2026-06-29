@@ -1,9 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/set-state-in-effect */
 import "../App.css";
 import Lista from "../components/Lista";
 
 import { useEffect, useState, useMemo } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { getDocsPublic, aumentarLikes, retirarLike } from "../api/listasApi";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
@@ -11,9 +12,11 @@ import { mainAnimation } from "../utils/animation";
 import { useAuth } from "../context/AuthContext";
 
 export default function PublicDocs() {
+  const navigate = useNavigate();
   const { token } = useAuth();
   const [loading, setLoading] = useState(false);
   const [docs, setDocs] = useState([]);
+  const [likeLoading, setLikeLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const q = searchParams.get("q") || "";
@@ -23,7 +26,7 @@ export default function PublicDocs() {
     try {
       setLoading(true);
 
-      const data = await getDocsPublic();
+      const data = await getDocsPublic(token);
 
       setDocs(data);
     } catch (err) {
@@ -38,7 +41,15 @@ export default function PublicDocs() {
   }, []);
 
   async function handleLike(id, liked) {
+    if (likeLoading) return;
+
     try {
+      setLikeLoading(true);
+      if (!token) {
+        navigate("/login");
+        return;
+      }
+
       if (liked) {
         await retirarLike(id, token);
       } else {
@@ -50,7 +61,7 @@ export default function PublicDocs() {
           doc.id === id
             ? {
                 ...doc,
-                likes: liked ? doc.likes - 1 : doc.liked + 1,
+                likes: liked ? doc.likes - 1 : doc.likes + 1,
                 user_liked: liked ? 0 : 1,
               }
             : doc,
@@ -58,6 +69,8 @@ export default function PublicDocs() {
       );
     } catch (err) {
       console.log(err);
+    } finally {
+      setLikeLoading(false);
     }
   }
 
@@ -102,6 +115,7 @@ export default function PublicDocs() {
             className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
           />
         </div>
+        <div>AÑADIR FILTROS</div>
         <div>
           <Link
             to="/docs"

@@ -12,9 +12,14 @@ export const getDocId = async ({ id }) => {
   return data;
 };
 
-export const getDocsPublic = async () => {
+export const getDocsPublic = async (token) => {
   const res = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/api/lista/publicDocs`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    },
   );
   const data = await res.json();
   return data;
@@ -125,7 +130,6 @@ export const aumentarLikes = async (id, token) => {
       },
     );
     const data = await res.json();
-    console.log(data);
     return data;
   } catch (err) {
     console.log(err);
