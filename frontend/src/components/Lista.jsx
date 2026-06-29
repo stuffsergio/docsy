@@ -120,12 +120,12 @@ export default function Lista({
                 <div className="flex flex-row items-center gap-2 opacity-70">
                   {likes !== 0 && <span className={`text-xs`}>{likes}</span>}
                   <motion.button
-                    onClick={() => darLike(id)}
+                    onClick={() => darLike(id, usersLike)}
                     whileHover={{ y: -3, x: -1, rotate: -10 }}
                     whileTap={{ y: 1, x: 1, rotate: 5 }}
                   >
                     <ThumbsUp
-                      className={`w-3.5 h-auto ${usersLike ? "bg-blue-500" : "bg-transparent"}`}
+                      className={`w-3.5 h-auto ${usersLike ? "text-blue-500 fill-blue-300" : "text-white"}`}
                     />
                   </motion.button>
                 </div>

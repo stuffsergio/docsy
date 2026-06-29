@@ -4,7 +4,7 @@ import Lista from "../components/Lista";
 
 import { useEffect, useState, useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { aumentarLikes, getDocsPublic } from "../api/listasApi";
+import { getDocsPublic, aumentarLikes, retirarLike } from "../api/listasApi";
 import { Plus } from "lucide-react";
 import { motion } from "framer-motion";
 import { mainAnimation } from "../utils/animation";
@@ -37,14 +37,26 @@ export default function PublicDocs() {
     obtenerLista();
   }, []);
 
-  async function handleLike(id) {
+  async function handleLike(id, liked) {
     try {
-      console.log("ID que recibe: " + typeof id);
-      const data = await aumentarLikes(id, token);
-      console.log(data);
-      console.log("Has dado me gusta al documento " + id);
+      if (liked) {
+        await retirarLike(id, token);
+      } else {
+        await aumentarLikes(id, token);
+      }
+
+      setDocs((prev) =>
+        prev.map((doc) =>
+          doc.id === id
+            ? {
+                ...doc,
+                likes: liked ? doc.likes - 1 : doc.liked + 1,
+                user_liked: liked ? 0 : 1,
+              }
+            : doc,
+        ),
+      );
     } catch (err) {
-      console.log("Error al dar me gusta");
       console.log(err);
     }
   }
@@ -70,19 +82,6 @@ export default function PublicDocs() {
         d.body.toLowerCase().includes(q.toLowerCase()),
     );
   }, [docs, q]);
-
-  const userLike = [
-    true,
-    false,
-    true,
-    false,
-    true,
-    false,
-    false,
-    true,
-    true,
-    true,
-  ];
 
   return (
     <motion.div {...mainAnimation} className="relative">
@@ -141,7 +140,7 @@ export default function PublicDocs() {
                   avatar_img: l.avatar_img,
                 }}
                 loading={loading}
-                usersLike={userLike[index]}
+                usersLike={l.user_liked === 1}
               />
             ))}
           </ul>
