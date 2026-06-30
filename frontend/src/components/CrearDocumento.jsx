@@ -225,7 +225,7 @@ export default function CrearDocumento({
       />
       <motion.div
         {...fadeAnimation2}
-        className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 lg:w-[50dvw] md:w-[75dvw] sm:w-[80dvw] w-[90dvw] z-50"
+        className="fixed top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 lg:w-[50dvw] md:w-[75dvw] sm:w-[80dvw] w-dvw h-dvh md:h-fit z-50"
       >
         <div className="relative bg-black py-14 px-12">
           {!editando && (
@@ -235,7 +235,7 @@ export default function CrearDocumento({
             >
               <button
                 onClick={salir}
-                className="absolute top-1/2 -translate-y-1/2 left-5 px-4 text-white rounded-full hover:cursor-pointer"
+                className="absolute top-1/2 -translate-y-1/2 -left-4 px-4 text-white rounded-full hover:cursor-pointer"
               >
                 <ChevronLeft className="w-6 h-auto" />
               </button>
@@ -264,7 +264,7 @@ export default function CrearDocumento({
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             {/* INPUT TÍTULO */}
-            <div className="flex flex-row justify-between text-lg">
+            <div className="flex flex-row justify-between md:text-lg text-base">
               <label htmlFor="title" className="flex-1">
                 Título
               </label>
@@ -277,12 +277,12 @@ export default function CrearDocumento({
                 ref={inputTitleRef}
                 value={form.title}
                 onChange={handleChange}
-                className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+                className="flex-1 px-3 py-1.5 md:text-base text-sm border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
               />
             </div>
 
             {/* INPUT SUBTÍTULO */}
-            <div className="flex flex-row justify-between text-lg">
+            <div className="flex flex-row justify-between md:text-lg text-base">
               <label htmlFor="subtitle" className="flex-1">
                 Subtítulo
               </label>
@@ -295,12 +295,12 @@ export default function CrearDocumento({
                 ref={inputSubtitleRef}
                 value={form.subtitle}
                 onChange={handleChange}
-                className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+                className="flex-1 px-3 py-1.5 md:text-base text-sm border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
               />
             </div>
 
             {/* INPUT CUERPO */}
-            <div className="flex flex-row justify-between text-lg">
+            <div className="flex flex-row justify-between md:text-lg text-base">
               <label htmlFor="body" className="flex-1">
                 Cuerpo
               </label>
@@ -313,12 +313,12 @@ export default function CrearDocumento({
                 ref={inputBodyRef}
                 value={form.body}
                 onChange={handleChange}
-                className="overflow-y-auto flex-1 px-3 py-1.5 text-base resize-none border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+                className="overflow-y-auto flex-1 px-3 py-1.5 md:text-base text-sm resize-none border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
               ></textarea>
             </div>
 
             {/* INPUT STATUS */}
-            <div className="flex flex-row justify-between text-lg">
+            <div className="flex flex-row justify-between md:text-lg text-base">
               <label htmlFor="status" className="flex-1">
                 Status
               </label>
@@ -327,23 +327,23 @@ export default function CrearDocumento({
                 id="status"
                 value={form.status}
                 onChange={handleChange}
-                className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+                className="flex-1 px-3 py-1.5 md:text-base text-sm border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
               >
                 <option
                   value="pendiente"
-                  className="bg-black text-base border border-white/60"
+                  className="bg-black md:text-base text-sm border border-white/60"
                 >
                   Pendiente
                 </option>
                 <option
                   value="publicado"
-                  className="bg-black text-base border border-white/60"
+                  className="bg-black md:text-base text-sm border border-white/60"
                 >
                   Publicado
                 </option>
                 <option
                   value="eliminado"
-                  className="bg-black text-base border border-white/60"
+                  className="bg-black md:text-base text-sm border border-white/60"
                 >
                   Eliminado
                 </option>
@@ -449,14 +449,14 @@ export default function CrearDocumento({
                         type="button"
                         onClick={removeImage}
                         className="
-              self-start
-              rounded-full
-              p-2
-              text-white/40
-              transition-colors
-              hover:bg-white/10
-              hover:text-white
-            "
+                          self-start
+                          rounded-full
+                          p-2
+                          text-white/40
+                          transition-colors
+                          hover:bg-white/10
+                          hover:text-white
+                        "
                       >
                         <X size={16} />
                       </motion.button>

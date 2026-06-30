@@ -58,7 +58,6 @@ export default function Signup() {
 
     try {
       const res = await signup(form);
-      console.log(res);
       login(res.token); // Método dentro de AuthContext que guarda token en localStorage
 
       resetForm();

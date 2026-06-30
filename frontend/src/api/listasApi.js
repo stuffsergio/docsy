@@ -118,7 +118,6 @@ export const eliminarDocumento = async (id, token) => {
 // GESTIÓN LIKES
 export const aumentarLikes = async (id, token) => {
   try {
-    console.log("ID que llega: " + id);
     const res = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/api/lista/likes/${id}`,
       {

@@ -25,7 +25,6 @@ export default function PublicDocsDetalle() {
 
       const documento = await getDocPublicById(id, token);
       setData(documento);
-      console.log(documento);
     } catch (err) {
       console.log(err);
     } finally {
@@ -77,6 +76,43 @@ export default function PublicDocsDetalle() {
 
       <div className="lg:w-[45dvw] md:w-[70dvw] m-auto mb-10 flex flex-col gap-6">
         {/* HEADER */}
+        <div className="relative h-52 overflow-hidden group">
+          {(data.image || data.image_thumb) && (
+            <>
+              <motion.img
+                src={`${import.meta.env.VITE_BACKEND_URL}${data.image_thumb || data.image}`}
+                alt={`${import.meta.env.VITE_BACKEND_URL}${data.image_thumb}`}
+                onError={(e) => {
+                  console.log("ERROR IMAGEN");
+                  console.log(e.currentTarget.src);
+                }}
+                whileHover={{
+                  scale: 1.05,
+                }}
+                transition={{
+                  duration: 0.5,
+                }}
+                className="w-full h-full object-cover transition-transform duration-500"
+              />
+
+              {/* Degradado rectangular desde los 4 lados */}
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  background: `
+                    linear-gradient(to top, #111111 0%, transparent 10%),
+                    linear-gradient(to bottom, #111111 0%, transparent 5%),
+                    linear-gradient(to left, #111111 0%, transparent 5%),
+                    linear-gradient(to right, #111111 0%, transparent 5%)
+                  `,
+                }}
+              />
+
+              {/* pequeño brillo al hover */}
+              <div className="absolute inset-0 bg-white/0 group-hover:bg-white/2 transition-all duration-1000" />
+            </>
+          )}
+        </div>
         <div className="flex flex-col justify-between gap-10">
           <div className="flex flex-col gap-4">
             <h2 className="font-bold text-4xl leading-12">{data.title}</h2>
@@ -103,29 +139,37 @@ export default function PublicDocsDetalle() {
               <div>
                 <p className="text-sm">{formatearFecha(data.last_modified)}</p>
               </div>
+              {/* LIKES */}
+              <div className="flex flex-row justify-end items-center gap-2 opacity-70">
+                {data.likes !== 0 && (
+                  <span className={`text-xs`}>{data.likes}</span>
+                )}
+                <motion.button
+                  onClick={() => handleLike(id, data.user_liked)}
+                  whileHover={{ y: -3, x: -1, rotate: -10 }}
+                  whileTap={{ y: 1, x: 1, rotate: 5 }}
+                >
+                  <ThumbsUp
+                    className={`w-3.5 h-auto ${data.user_liked ? "text-blue-500 fill-blue-300" : "text-white"}`}
+                  />
+                </motion.button>
+              </div>
             </div>
-          </div>
-        </div>
-        {/* LIKES */}
-        <div>
-          <div className="flex flex-row items-center gap-2 opacity-70">
-            {data.likes !== 0 && (
-              <span className={`text-xs`}>{data.likes}</span>
-            )}
-            <motion.button
-              onClick={() => handleLike(id, data.user_liked)}
-              whileHover={{ y: -3, x: -1, rotate: -10 }}
-              whileTap={{ y: 1, x: 1, rotate: 5 }}
-            >
-              <ThumbsUp
-                className={`w-3.5 h-auto ${data.user_liked ? "text-blue-500 fill-blue-300" : "text-white"}`}
-              />
-            </motion.button>
           </div>
         </div>
         {/* BODY */}
         <div className="flex flex-col">
           <p className="text-lg tracking-wide leading-8">{data.body}</p>
+        </div>
+        <div>
+          <h3>Enlaces - bibliografía</h3>
+          <p className="text-xs">
+            Aquí irán los enlaces para bibliografía, servirán para asegurarse de
+            que el documento tiene fundamentos, irán rankeados según la
+            fiabilidad de las fuentes, por ahora está basado en cantidad de
+            documentos adjuntados al usuario (en un futuro un llm controlará
+            esto)
+          </p>
         </div>
       </div>
     </motion.div>

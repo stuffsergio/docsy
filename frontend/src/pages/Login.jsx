@@ -54,7 +54,6 @@ export default function Login() {
 
     try {
       const res = await loginApi(form);
-      console.log(res);
       login(res.token); // Método en AuthContext que guarda token en localStorage
 
       resetForm();

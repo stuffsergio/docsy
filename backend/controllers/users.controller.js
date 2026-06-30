@@ -18,7 +18,6 @@ export const listarUsuarios = async (req, res, next) => {
     if (usuarios.length === 0)
       throw new AppError("No hay usuarios registrados", 404);
 
-    console.log(usuarios);
     res.status(200).json(usuarios);
   } catch (err) {
     next(err);
@@ -31,8 +30,6 @@ export const buscarUsuarioId = async (req, res, next) => {
 
     if (usuario.length === 0)
       throw new AppError("Usuario no encontrado - id", 404);
-
-    console.log(usuario);
 
     res.status(200).json(usuario);
   } catch (err) {
@@ -48,8 +45,6 @@ export const buscarUsuarioEmail = async (req, res, next) => {
     if (usuario.length === 0)
       throw new AppError("Usuario no encontrado - email", 404);
 
-    console.log(usuario);
-
     res.status(200).json(usuario);
   } catch (err) {
     next(err);
@@ -59,8 +54,6 @@ export const buscarUsuarioEmail = async (req, res, next) => {
 export const contarDocumentosUsuario = async (req, res, next) => {
   try {
     const total_documentos = await getCountDocuments();
-
-    console.log(total_documentos);
 
     res.status(200).json(total_documentos);
   } catch (err) {
@@ -76,8 +69,6 @@ export const signup = async (req, res, next) => {
       throw new AppError("Faltan datos por completar", 400);
 
     const usuario = await getUserByEmail(email);
-
-    console.log(usuario);
 
     if (usuario.length !== 0)
       throw new AppError("Usuario ya existente - try to login", 404);
@@ -121,14 +112,12 @@ export const login = async (req, res, next) => {
       throw new AppError("Debes rellenar email y password", 400);
 
     const existeUsuario = await getUserByEmail(email);
-    console.log(existeUsuario);
     if (existeUsuario.length === 0)
       throw new AppError("Usuario no registrado - try to signup", 404);
 
     const usuario = existeUsuario[0];
 
     const esContraseñaValida = await bcrypt.compare(password, usuario.password);
-    console.log("¿La contraseña es válida?", esContraseñaValida ? "Sí" : "No");
     if (!esContraseñaValida) throw new AppError("Credenciales inválidas", 401);
 
     const token = jwt.sign(
@@ -161,12 +150,10 @@ export const login = async (req, res, next) => {
 
 export const profile = async (req, res, next) => {
   try {
-    console.log(req.user);
     const usuarioEncontrado = await getUserById2(req.user.id);
 
     if (usuarioEncontrado.length === 0)
       throw new AppError("Usuario no encontrado", 404);
-    console.log(usuarioEncontrado);
 
     const { id, name, email, role, created_at, total_documentos, avatar_img } =
       usuarioEncontrado[0];

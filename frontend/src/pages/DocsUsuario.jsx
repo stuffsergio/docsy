@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useAuth } from "../context/AuthContext";
 import { Plus, Search } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -46,10 +47,8 @@ export default function DocsUsuario() {
   }
 
   async function eliminarDoc(id) {
-    console.log("Eliminando... id ", id);
     try {
       const data = await eliminarDocumento(id, token);
-      console.log(data);
 
       if (docEditar?.id === id) {
         setDocEditar(null);
@@ -72,16 +71,16 @@ export default function DocsUsuario() {
 
       {/* BARRA AYUDA */}
       {documentos.length !== 0 && (
-        <div className="md:w-[80dvw] sm:w-[90dvw] w-[95dvw] m-auto flex flex-row justify-between items-center py-10 px-5">
+        <div className="md:w-[80dvw] sm:w-[90dvw] w-[95dvw] m-auto flex md:flex-row flex-col md:justify-between justify-start md:items-center items-baseline md:py-10 py-6 px-5 md:gap-0 gap-5">
           <div className="flex flex-row items-center gap-5">
             <label htmlFor="buscar">
               <p className="md:flex hidden">Buscar</p>
-              <Search className="md:hidden flex w-5 h-auto" />
+              <Search className="md:hidden flex w-4 h-auto" />
             </label>
             <input
               type="search"
               name="buscar"
-              className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
+              className="md:w-full px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
             />
           </div>
           <div>
