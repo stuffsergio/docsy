@@ -37,7 +37,7 @@ export default function Home() {
         <img
           src="/document.webp"
           alt="document"
-          className="w-45 h-auto animate"
+          className="lg:w-40 w-30 h-auto animate"
         />
       </motion.div>
       <motion.div
@@ -48,7 +48,7 @@ export default function Home() {
         <img
           src="/pencil.webp"
           alt="document"
-          className="w-45 h-auto animate"
+          className="md:w-40 w-30 h-auto animate"
         />
       </motion.div>
       <motion.div
