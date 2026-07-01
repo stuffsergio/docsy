@@ -42,8 +42,8 @@ export default function Lista({
             {(image || image_thumb) && (
               <>
                 <motion.img
-                  src={`${import.meta.env.VITE_BACKEND_URL}${image_thumb || image}`}
-                  alt={`${import.meta.env.VITE_BACKEND_URL}${image_thumb}`}
+                  src={`${image_thumb || image}`}
+                  alt={`${image_thumb}`}
                   onError={(e) => {
                     console.log("ERROR IMAGEN");
                     console.log(e.currentTarget.src);
