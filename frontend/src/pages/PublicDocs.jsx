@@ -115,7 +115,12 @@ export default function PublicDocs() {
             className="flex-1 px-3 py-1.5 text-base border border-white/30 focus:outline-none focus:ring-3 focus:ring-white/30 focus:border-white/60 transition-all transform duration-200"
           />
         </div>
-        <div>AÑADIR FILTROS</div>
+        <div>
+          <h4>AÑADIR FILTROS</h4>
+          <div>
+            <p>Categoría, tags, typo, most viewed, recents...</p>
+          </div>
+        </div>
         <div>
           <Link
             to="/docs"
