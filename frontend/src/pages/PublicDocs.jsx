@@ -31,6 +31,7 @@ export default function PublicDocs() {
       setDocs(data);
     } catch (err) {
       console.log(err);
+      console.log("error aqui", token);
     } finally {
       setLoading(false);
     }

@@ -12,7 +12,6 @@ export default function Home() {
             <h1 className="font-bold text-6xl">
               Registra tus documentos favoritos
             </h1>
-            <Heart className="w-10.5 h-auto rotate-45" />
           </div>
           <h3 className="text-2xl opacity-70">
             Gestiona la actualidad y participa en ella

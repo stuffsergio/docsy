@@ -13,13 +13,14 @@ export const getDocId = async ({ id }) => {
 };
 
 export const getDocsPublic = async (token) => {
+  const headers = {};
+  if (token) {
+    headers.Authorization = `Bearer ${token}`;
+  }
+
   const res = await fetch(
     `${import.meta.env.VITE_BACKEND_URL}/api/lista/publicDocs`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    },
+    { headers },
   );
   const data = await res.json();
   return data;
