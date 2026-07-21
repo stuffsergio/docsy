@@ -81,7 +81,7 @@ export default function PublicDocsDetalle() {
             <>
               <motion.img
                 src={`${data.image_thumb || data.image}`}
-                alt={`${import.meta.env.VITE_BACKEND_URL}${data.image_thumb}`}
+                alt={`${data.image_thumb}`}
                 onError={(e) => {
                   console.log("ERROR IMAGEN");
                   console.log(e.currentTarget.src);
