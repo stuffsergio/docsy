@@ -6,15 +6,15 @@ import { floatAnimation, mainAnimation } from "../utils/animation";
 export default function Home() {
   return (
     <motion.div {...mainAnimation} className="relative">
-      <div className="h-[74dvh] py-10 px-20 flex flex-col items-center justify-center gap-10">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <div className="flex flex-row items-end">
-            <h1 className="font-bold text-6xl">
-              Registra tus documentos favoritos
+      <div className="h-[74dvh] py-10 border flex flex-col items-center justify-center gap-10">
+        <div className="flex flex-col items-center justify-center gap-6">
+          <div className="flex flex-row items-center justify-center lg:px-20 md:px-16 sm:px-12 px-10">
+            <h1 className="text-center font-bold lg:text-6xl md:text-5xl sm:text-4xl text-4xl lg:tracking-wide md:tracking-normal tracking-tight">
+              Participa en la actualidad
             </h1>
           </div>
-          <h3 className="text-2xl opacity-70">
-            Gestiona la actualidad y participa en ella
+          <h3 className="text-center lg:text-2xl md:text-xl sm:text-lg text-base opacity-70">
+            Artículos a mano, con rigurosidad y fundamento
           </h3>
         </div>
         <div>
@@ -22,7 +22,7 @@ export default function Home() {
             to="/login"
             className="group flex flex-row items-center gap-2 py-3 px-6 border border-[#1f1f1f]/60 bg-white text-black rounded-full hover:opacity-90 transition-all transform duration-250"
           >
-            <p>Crear mi primer documento</p>
+            <p>Crear mi primer artículo</p>
             <ArrowRight className="w-5 h-auto bg-[#111111] text-white rounded-full p-1 group-hover:translate-x-2 transition-all transform duration-350" />
           </Link>
         </div>
@@ -31,7 +31,7 @@ export default function Home() {
       {/* IMAGES FLOTANTES */}
       <motion.div
         {...floatAnimation}
-        className="absolute top-1/2 -translate-y-70 lg:left-100 md:left-20 sm:left-10 -z-10"
+        className="absolute top-1/2 -translate-y-70 lg:left-100 md:left-20 sm:left-10 hidden lg:block md:block -z-10"
       >
         <img
           src="/document.webp"
